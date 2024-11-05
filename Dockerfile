@@ -1,3 +1,4 @@
+# Build stage
 FROM golang:latest AS builder
 LABEL authors="drawiin"
 WORKDIR /app
@@ -8,9 +9,14 @@ COPY . .
 # -o flag to specify the output binary name
 RUN GOOS=linux CGO_ENABLED=0 go build -o runner ./cmd
 
-# Copy the binary to the scratch image, this way we have a minimal
-# image because we don't need the whole OS neither the golang image
+# Stage to get CA certificates
+FROM alpine:latest AS certs
+RUN apk --no-cache add ca-certificates
+
+# Final stage
 FROM scratch
 COPY --from=builder /app/runner .
+COPY --from=builder /app/.env .env
+COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 # Use ENTRYPOINT to allow passing arguments to the binary
 ENTRYPOINT ["./runner"]
