@@ -3,14 +3,18 @@ package main
 import (
 	"fmt"
 	"go-zip-code-temperature/config"
+	"go-zip-code-temperature/internal/client"
 	"go-zip-code-temperature/internal/handler"
+	"go-zip-code-temperature/internal/service"
 	"log"
 	"net/http"
 )
 
 func main() {
 	appConfig := getAppConfig()
-	temperatureHandler := getHandler(appConfig)
+	webClient := client.NewWebClient()
+	temperatureService := getService(webClient, *appConfig)
+	temperatureHandler := getHandler(temperatureService)
 	port := appConfig.WebServerPort
 	http.HandleFunc("GET /temperature/{cep}", temperatureHandler.GetTemperature)
 
@@ -28,6 +32,10 @@ func getAppConfig() *config.Config {
 	return appConfig
 }
 
-func getHandler(config *config.Config) *handler.CityTemperatureHandler {
-	return handler.NewCityTemperatureHandler(config)
+func getHandler(service *service.CityTemperatureService) *handler.CityTemperatureHandler {
+	return handler.NewCityTemperatureHandler(service)
+}
+
+func getService(client client.WebClient, config config.Config) *service.CityTemperatureService {
+	return service.NewCityTemperatureService(client, config)
 }
