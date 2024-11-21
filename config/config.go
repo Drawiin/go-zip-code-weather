@@ -1,7 +1,10 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"github.com/spf13/viper"
+	"io/fs"
 )
 
 var cfg *Config
@@ -18,10 +21,23 @@ func LoadConfig(path string) (*Config, error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigType("env")
 	viper.SetConfigFile(".env")
-	// Environment variables will override the .env values eg export DB_DRIVER=postgres will override the DB_DRIVER value in .env
-	// enabling us to change some values without changing the .env file for testing purposes'	viper.AutomaticEnv()
+
+	// Environment variables will override the .env values
+	viper.AutomaticEnv()
+	// Bind environment variables to the config struct if i dont do this it does not work
+	viper.BindEnv("cep_service_url")
+	viper.BindEnv("weather_api_url")
+	viper.BindEnv("weather_api_key")
+	viper.BindEnv("web_server_port")
+
+	// Read the .env file
 	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
+		// If the .env file is not found, continue without error
+		fmt.Printf("Loading config from .env file %T\n", err)
+		var pathError *fs.PathError
+		if !errors.As(err, &pathError) {
+			return nil, err
+		}
 	}
 
 	err := viper.Unmarshal(&cfg)

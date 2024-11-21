@@ -16,7 +16,6 @@ RUN apk --no-cache add ca-certificates
 # Final stage
 FROM scratch
 COPY --from=builder /app/runner .
-COPY --from=builder /app/.env .env
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 # Use ENTRYPOINT to allow passing arguments to the binary
 ENTRYPOINT ["./runner"]

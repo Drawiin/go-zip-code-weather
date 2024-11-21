@@ -30,6 +30,7 @@ func (s CityTemperatureService) GetTemperature(cep string) (model.TemperatureRes
 	cepUrl := s.config.CEPServiceURL + "/" + cep
 	cepResponse, err := s.webClient.Get(cepUrl)
 	if err != nil {
+		fmt.Println("Error reaching out to CEP service: ", err)
 		return model.TemperatureResponse{}, err
 	}
 	fmt.Println("CEP response: ", string(cepResponse))

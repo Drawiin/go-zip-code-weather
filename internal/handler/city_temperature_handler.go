@@ -16,9 +16,15 @@ func NewCityTemperatureHandler(service *service.CityTemperatureService) *CityTem
 
 func (h CityTemperatureHandler) GetTemperature(w http.ResponseWriter, r *http.Request) {
 	cep := r.PathValue("cep")
+	if cep == "" || len(cep) != 8 {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("invalid zipcode"))
+		return
+	}
 	temperature, err := h.service.GetTemperature(cep)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("can not find zipcode"))
 		return
 	}
 
