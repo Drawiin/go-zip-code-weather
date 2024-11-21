@@ -10,7 +10,7 @@ run-img:
       -e CEP_SERVICE_URL=https://brasilapi.com.br/api/cep/v2 \
       -e WEATHER_API_URL=https://api.weatherapi.com/v1/current.json \
       -e WEATHER_API_KEY=abc123 \
-      -e WEB_SERVER_PORT=8080 \
+      -e PORT=8080 \
       vini65599/go-zip-code-temperature:latest
 
 push-img:

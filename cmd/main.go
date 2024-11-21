@@ -15,7 +15,7 @@ func main() {
 	webClient := client.NewWebClient()
 	temperatureService := getService(webClient, *appConfig)
 	temperatureHandler := getHandler(temperatureService)
-	port := appConfig.WebServerPort
+	port := appConfig.Port
 	http.HandleFunc("GET /temperature/{cep}", temperatureHandler.GetTemperature)
 
 	fmt.Println("Starting server on :" + port)

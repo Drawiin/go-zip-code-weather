@@ -13,7 +13,7 @@ type Config struct {
 	CEPServiceURL string `mapstructure:"CEP_SERVICE_URL"`
 	WeatherAPIURL string `mapstructure:"WEATHER_API_URL"`
 	WeatherAPIKey string `mapstructure:"WEATHER_API_KEY"`
-	WebServerPort string `mapstructure:"WEB_SERVER_PORT"`
+	Port          string `mapstructure:"PORT"`
 }
 
 func LoadConfig(path string) (*Config, error) {
@@ -28,7 +28,7 @@ func LoadConfig(path string) (*Config, error) {
 	viper.BindEnv("cep_service_url")
 	viper.BindEnv("weather_api_url")
 	viper.BindEnv("weather_api_key")
-	viper.BindEnv("web_server_port")
+	viper.BindEnv("port")
 
 	// Read the .env file
 	if err := viper.ReadInConfig(); err != nil {
