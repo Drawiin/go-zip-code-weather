@@ -7,7 +7,7 @@ COPY . .
 # Disable CGO for static linking
 # Add ldflags to reduce binary size
 # -o flag to specify the output binary name
-RUN GOOS=linux CGO_ENABLED=0 go build -o runner ./cmd
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o runner ./cmd
 
 # Stage to get CA certificates
 FROM alpine:latest AS certs
